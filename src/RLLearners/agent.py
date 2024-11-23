@@ -1,7 +1,6 @@
 import numpy as np
 import utils
 
-
 class Agent:
     # 에이전트 상태가 구성하는 값 개수
     # 주식 보유 비율, 현재 손익, 평균 매수 단가 대비 등락률

@@ -4,7 +4,6 @@ import numpy as np
 
 import settings
 
-
 COLUMNS_CHART_DATA = ['date', 'open', 'high', 'low', 'close', 'volume']
 
 COLUMNS_TRAINING_DATA_V1 = [

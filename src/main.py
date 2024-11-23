@@ -8,7 +8,6 @@ import settings
 import utils
 import data_manager
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--mode', choices=['train', 'test', 'update', 'predict'], default='train')
@@ -17,7 +16,7 @@ if __name__ == '__main__':
     parser.add_argument('--stock_code', nargs='+')
     parser.add_argument('--rl_method', choices=['dqn', 'pg', 'ac', 'a2c', 'a3c', 'monkey'])
     parser.add_argument('--net', choices=['dnn', 'lstm', 'cnn', 'monkey'], default='dnn')
-    parser.add_argument('--backend', choices=['pytorch', 'tensorflow', 'plaidml'], default='pytorch')
+    # parser.add_argument('--backend', choices=['pytorch', 'tensorflow'], default='pytorch')
     parser.add_argument('--start_date', default='20200101')
     parser.add_argument('--end_date', default='20201231')
     parser.add_argument('--lr', type=float, default=0.0001)
@@ -36,11 +35,11 @@ if __name__ == '__main__':
     num_steps = 5 if args.net in ['lstm', 'cnn'] else 1
 
     # Backend 설정
-    os.environ['RLTRADER_BACKEND'] = args.backend
-    if args.backend == 'tensorflow':
-        os.environ['KERAS_BACKEND'] = 'tensorflow'
-    elif args.backend == 'plaidml':
-        os.environ['KERAS_BACKEND'] = 'plaidml.keras.backend'
+    # os.environ['RLTRADER_BACKEND'] = args.backend
+    # if args.backend == 'tensorflow':
+    #     os.environ['KERAS_BACKEND'] = 'tensorflow'
+    # elif args.backend == 'plaidml':
+    #     os.environ['KERAS_BACKEND'] = 'plaidml.keras.backend'
 
     # 출력 경로 생성
     output_path = os.path.join(settings.BASE_DIR, 'output', output_name)
@@ -74,8 +73,7 @@ if __name__ == '__main__':
     logger.info(params)
     
     # Backend 설정, 로그 설정을 먼저하고 RLTrader 모듈들을 이후에 임포트해야 함
-    from learners import ReinforcementLearner, DQNLearner, \
-        PolicyGradientLearner, ActorCriticLearner, A2CLearner, A3CLearner
+    from RLLearners import ReinforcementLearner, ActorCriticLearner, A2CLearner, A3CLearner, DQNLearner, PolicyGradientLearner
 
     common_params = {}
     list_stock_code = []

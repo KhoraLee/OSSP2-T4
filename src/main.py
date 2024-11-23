@@ -52,7 +52,9 @@ if __name__ == '__main__':
         f.write(params)
 
     # 모델 경로 준비
-    # 모델 포멧은 TensorFlow는 h5, PyTorch는 pickle
+    model_path = os.path.join(settings.BASE_DIR, 'models')
+    if not os.path.isdir(model_path):
+        os.makedirs(model_path)
     value_network_path = os.path.join(settings.BASE_DIR, 'models', value_network_name)
     policy_network_path = os.path.join(settings.BASE_DIR, 'models', policy_network_name)
 

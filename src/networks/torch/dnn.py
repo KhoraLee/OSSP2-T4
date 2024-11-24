@@ -1,4 +1,4 @@
-from . import Network
+from .network import Network
 import torch
 import numpy as np
 

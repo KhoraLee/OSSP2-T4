@@ -9,7 +9,7 @@ import numpy as np
 from tqdm import tqdm
 from . import Environment
 from . import Agent
-from Networks import Network, DNN, LSTMNetwork, CNN
+from networks import Network, DNN, LSTMNetwork, CNN
 from visualizer import Visualizer
 import utils
 import settings

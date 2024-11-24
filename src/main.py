@@ -75,7 +75,7 @@ if __name__ == '__main__':
     logger.info(params)
     
     # Backend 설정, 로그 설정을 먼저하고 RLTrader 모듈들을 이후에 임포트해야 함
-    from RLLearners import ReinforcementLearner, ActorCriticLearner, A2CLearner, A3CLearner, DQNLearner, PolicyGradientLearner
+    from rl import ReinforcementLearner, ActorCriticLearner, A2CLearner, A3CLearner, DQNLearner, PolicyGradientLearner
 
     common_params = {}
     list_stock_code = []

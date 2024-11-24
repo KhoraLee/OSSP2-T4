@@ -1,4 +1,4 @@
-from .RLLearner import ReinforcementLearner
+from .learner import ReinforcementLearner
 import numpy as np
 import utils
 

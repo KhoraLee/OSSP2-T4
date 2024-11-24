@@ -11,7 +11,7 @@ class Network:
     lock = threading.Lock()
 
     def __init__(self, input_dim=0, output_dim=0, lr=0.001, 
-                shared_network=None, activation='sigmoid', loss='mse'):
+                shared_network=None, activation='relu', loss='mse'):
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.lr = lr
@@ -84,7 +84,7 @@ class Network:
 
     @classmethod
     def get_shared_network(cls, net='dnn', num_steps=1, input_dim=0, output_dim=0):
-        from . import CNN, DNN, LSTMNetwork
+        from networks import CNN, DNN, LSTMNetwork
         if net == 'dnn':
             return DNN.get_network_head((input_dim,), output_dim)
         elif net == 'lstm':

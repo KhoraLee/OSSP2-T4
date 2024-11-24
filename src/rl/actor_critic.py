@@ -1,6 +1,6 @@
-from .RLLearner import ReinforcementLearner
+from .learner import ReinforcementLearner
 import numpy as np
-from Networks import Network, DNN, LSTMNetwork, CNN
+from networks import Network, DNN, LSTMNetwork, CNN
 import utils
 
 class ActorCriticLearner(ReinforcementLearner):

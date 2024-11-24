@@ -1,6 +1,6 @@
-from .RLLearner import ReinforcementLearner
+from .learner import ReinforcementLearner
 from . import A2CLearner
-from Networks import Network, DNN, LSTMNetwork, CNN
+from networks import Network, DNN, LSTMNetwork, CNN
 import threading
 
 class A3CLearner(ReinforcementLearner):

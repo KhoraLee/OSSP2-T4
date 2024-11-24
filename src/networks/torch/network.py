@@ -1,39 +1,17 @@
 import abc
 import threading
 import torch
-
+from ..base_network import BaseNetwork
 device = torch.device('cuda' if torch.cuda.is_available() else
                       # 'mps' if torch.mps.is_available() else # currently CPU is faster than MPS
                       'cpu')
 print(f'Pytorch Backend: {device}')
 
-class Network:
+class Network(BaseNetwork):
     lock = threading.Lock()
 
-    def __init__(self, input_dim=0, output_dim=0, lr=0.001, 
-                shared_network=None, activation='relu', loss='mse'):
-        self.input_dim = input_dim
-        self.output_dim = output_dim
-        self.lr = lr
-        self.shared_network = shared_network
-        self.activation = activation
-        self.loss = loss
-        
-        inp = None
-        if hasattr(self, 'num_steps'):
-            inp = (self.num_steps, input_dim)
-        else:
-            inp = (self.input_dim,)
-
-        # 공유 신경망 사용
-        self.head = None
-        if self.shared_network is None:
-            self.head = self.get_network_head(inp, self.output_dim)
-        else:
-            self.head = self.shared_network
-        
-        # 공유 신경망 미사용
-        # self.head = self.get_network_head(inp, self.output_dim)
+    def __init__(self, input_dim=0, output_dim=0, lr=0.001, shared_network=None, activation='relu', loss='mse'):
+        super().__init__(input_dim, output_dim, lr, shared_network, activation, loss)
 
         self.model = torch.nn.Sequential(self.head)
         if self.activation == 'linear':

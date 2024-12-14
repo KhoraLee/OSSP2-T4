@@ -81,9 +81,11 @@ class ReinforcementLearner:
         self.batch_size = 0
         # 로그 등 출력 경로
         self.output_path = output_path
-        self.start_epsilon = 1.0
-        self.end_epsilon = 0.01
-        self.alpha = 0.998 # Epoch 100일때는 0.954
+
+        # 학습시 simulated annealing
+        if self.start_epsilon == 1.0:
+            self.end_epsilon = 0.01
+            self.alpha = 0.998 # Epoch 100일때는 0.954
 
     def init_value_network(self, shared_network=None, activation='linear', loss='mse'):
         if self.net == 'dnn':

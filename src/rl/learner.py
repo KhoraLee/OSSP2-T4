@@ -156,7 +156,7 @@ class ReinforcementLearner:
         self.environment.observe()
         if len(self.training_data) > self.training_data_idx + 1:
             self.training_data_idx += 1
-            self.sample = self.training_data.iloc[self.training_data_idx].tolist()
+            self.sample = self.training_data[self.training_data_idx].tolist()
             self.sample.extend(self.agent.get_states())
             return self.sample
         return None
@@ -271,7 +271,7 @@ class ReinforcementLearner:
 
                 # 결정한 행동을 수행하고 보상 획득
                 reward = self.agent.act(action, confidence)
-
+                # print(f"현제 보상: {reward}")
                 # 행동 및 행동에 대한 결과를 기억
                 self.memory_sample.append(list(q_sample))
                 self.memory_action.append(action)
@@ -353,13 +353,14 @@ class ReinforcementLearner:
             pred_value = None
             pred_policy = None
             if self.value_network is not None:
-                pred_value = self.value_network.predict(list(q_sample))
+                pred_value = self.value_network.predict(list(q_sample)).tolist()
             if self.policy_network is not None:
-                pred_policy = self.policy_network.predict(list(q_sample))
+                pred_policy = self.policy_network.predict(list(q_sample)).tolist()
             
             # 신경망에 의한 행동 결정
-            action, confidence, _ = self.agent.decide_action(pred_value, pred_policy, 0)
-            result.append((self.environment.observation[0], int(action), float(confidence)))
+            # action, confidence, _ = self.agent.decide_action(pred_value, pred_policy, 0)
+            # result.append((self.environment.observation[0], int(action), float(confidence)))
+            result.append((self.environment.observation[0], pred_value, pred_policy))
 
         with open(os.path.join(self.output_path, f'pred_{self.stock_code}.json'), 'w') as f:
             print(json.dumps(result), file=f)

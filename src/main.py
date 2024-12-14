@@ -11,7 +11,7 @@ import data_manager
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--mode', choices=['train', 'test', 'update', 'predict'], default='train')
-    parser.add_argument('--ver', choices=['v1', 'v2', 'v3', 'v4'], default='v2')
+    parser.add_argument('--ver', choices=['v1', 'v2', 'v3', 'v4', 'v4.2'], default='v4.2')
     parser.add_argument('--name', default=utils.get_time_str())
     parser.add_argument('--stock_code', nargs='+')
     parser.add_argument('--rl_method', choices=['dqn', 'pg', 'ac', 'a2c', 'a3c', 'monkey'])
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     value_network_name = f'{args.name}_{args.rl_method}_{args.net}_value.mdl'
     policy_network_name = f'{args.name}_{args.rl_method}_{args.net}_policy.mdl'
     start_epsilon = 1 if args.mode in ['train', 'update'] else 0
-    num_epoches = 1000 if args.mode in ['train', 'update'] else 1
+    num_epoches = 100 if args.mode in ['train', 'update'] else 1
     num_steps = 5 if args.net in ['lstm', 'cnn'] else 1
 
     # Backend 설정

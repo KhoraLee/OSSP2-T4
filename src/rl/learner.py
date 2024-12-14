@@ -44,7 +44,10 @@ class ReinforcementLearner:
         self.chart_data = chart_data
         self.environment = Environment(chart_data)
         # 에이전트 설정
-        self.agent = Agent(self.environment, balance, min_trading_price, max_trading_price, trading_days=len(training_data))
+        days = 0
+        if training_data is not None:
+            days = len(training_data)
+        self.agent = Agent(self.environment, balance, min_trading_price, max_trading_price, trading_days=days)
         # 학습 데이터
         self.training_data = training_data
         self.sample = None

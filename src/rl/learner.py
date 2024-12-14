@@ -9,7 +9,7 @@ import numpy as np
 from tqdm import tqdm
 from . import Environment
 from . import Agent
-from networks import Network, DNN, LSTMNetwork, CNN
+from networks import Network, DNN, LSTMNetwork, CNN, CNN_LSTMNetwork
 from visualizer import Visualizer
 import utils
 import settings
@@ -100,6 +100,13 @@ class ReinforcementLearner:
                 lr=self.lr, num_steps=self.num_steps, 
                 shared_network=shared_network,
                 activation=activation, loss=loss)
+        elif self.net == 'cnn+lstm':
+            self.value_network = CNN_LSTMNetwork(
+                input_dim=self.num_features, 
+                output_dim=self.agent.NUM_ACTIONS, 
+                lr=self.lr, num_steps=self.num_steps, 
+                shared_network=shared_network,
+                activation=activation, loss=loss)
         if self.reuse_models:
             self.value_network.load_model(model_path=self.value_network_path)
 
@@ -120,6 +127,13 @@ class ReinforcementLearner:
                 activation=activation, loss=loss)
         elif self.net == 'cnn':
             self.policy_network = CNN(
+                input_dim=self.num_features, 
+                output_dim=self.agent.NUM_ACTIONS, 
+                lr=self.lr, num_steps=self.num_steps, 
+                shared_network=shared_network,
+                activation=activation, loss=loss)
+        elif self.net == 'cnn+lstm':
+            self.policy_network = CNN_LSTMNetwork(
                 input_dim=self.num_features, 
                 output_dim=self.agent.NUM_ACTIONS, 
                 lr=self.lr, num_steps=self.num_steps, 
@@ -152,13 +166,24 @@ class ReinforcementLearner:
         self.exploration_cnt = 0
         self.batch_size = 0
 
+    # def build_sample(self):
+    #     self.environment.observe()
+    #     if len(self.training_data) > self.training_data_idx + 1:
+    #         self.training_data_idx += 1
+    #         self.sample = self.training_data[self.training_data_idx].tolist()
+    #         self.sample.extend(self.agent.get_states())
+    #         return self.sample
+    #     return None
     def build_sample(self):
         self.environment.observe()
         if len(self.training_data) > self.training_data_idx + 1:
             self.training_data_idx += 1
-            self.sample = self.training_data[self.training_data_idx].tolist()
-            self.sample.extend(self.agent.get_states())
-            return self.sample
+            # Use numpy operations instead of list operations
+            sample = np.concatenate([
+                self.training_data[self.training_data_idx],
+                self.agent.get_states()
+            ])
+            return sample
         return None
 
     @abc.abstractmethod

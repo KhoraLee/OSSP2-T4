@@ -61,13 +61,15 @@ class Network(BaseNetwork):
 
   @classmethod
   def get_shared_network(cls, net='dnn', num_steps=1, input_dim=0, output_dim=0):
-    from networks import CNN, DNN, LSTMNetwork
+    from networks import CNN, DNN, LSTMNetwork, CNN_LSTMNetwork
     if net == 'dnn':
       return DNN.get_network_head((input_dim,), output_dim)
     elif net == 'lstm':
       return LSTMNetwork.get_network_head((num_steps, input_dim), output_dim)
     elif net == 'cnn':
       return CNN.get_network_head((num_steps, input_dim), output_dim)
+    elif net == 'cnn+lstm':
+      return CNN_LSTMNetwork.get_network_head((num_steps, input_dim), output_dim)
 
   @staticmethod
   @abc.abstractmethod

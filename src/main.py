@@ -15,7 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('--name', default=utils.get_time_str())
     parser.add_argument('--stock_code', nargs='+')
     parser.add_argument('--rl_method', choices=['dqn', 'pg', 'ac', 'a2c', 'a3c', 'monkey'])
-    parser.add_argument('--net', choices=['dnn', 'lstm', 'cnn', 'monkey'], default='dnn')
+    parser.add_argument('--net', choices=['dnn', 'lstm', 'cnn', 'cnn+lstm', 'monkey'], default='dnn')
     parser.add_argument('--backend', choices=['torch', 'mlx'], default='torch')
     parser.add_argument('--start_date', default='20200101')
     parser.add_argument('--end_date', default='20201231')
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     policy_network_name = f'{args.name}_{args.rl_method}_{args.net}_policy.mdl'
     start_epsilon = 1 if args.mode in ['train', 'update'] else 0
     num_epoches = 100 if args.mode in ['train', 'update'] else 1
-    num_steps = 5 if args.net in ['lstm', 'cnn'] else 1
+    num_steps = 5 if args.net in ['lstm', 'cnn', 'cnn+lstm'] else 1
 
     # Backend 설정
     os.environ['RLTRADER_BACKEND'] = args.backend

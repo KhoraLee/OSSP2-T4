@@ -22,10 +22,16 @@ class Agent:
     ACTIONS = [ACTION_BUY, ACTION_SELL, ACTION_HOLD]
     NUM_ACTIONS = len(ACTIONS)  # 인공 신경망에서 고려할 출력값의 개수
 
-    def __init__(self, environment, initial_balance, min_trading_price, max_trading_price):
+    def __init__(self, environment, initial_balance, min_trading_price, max_trading_price, trading_days):
         # 현재 주식 가격을 가져오기 위해 환경 참조
         self.environment = environment
         self.initial_balance = initial_balance  # 초기 자본금
+
+        self.trading_days = trading_days
+        self.current_day = 0
+        self.short_term_weight_start = 0.8
+        self.short_term_weight_end = 0.2
+        self.initial_price = -1
 
         # 최소 단일 매매 금액, 최대 단일 매매 금액
         self.min_trading_price = min_trading_price
@@ -55,6 +61,7 @@ class Agent:
         self.ratio_hold = 0
         self.profitloss = 0
         self.avg_buy_price = 0
+        self.current_day = 0
 
     def set_balance(self, balance):
         self.initial_balance = balance
@@ -125,12 +132,23 @@ class Agent:
         trading_price = self.min_trading_price + added_trading_price
         return max(int(trading_price / self.environment.get_price()), 1)
 
+    def get_dynamic_weights(self):
+        progress = self.current_day / self.trading_days
+        short_term_weight = self.short_term_weight_start - progress * (self.short_term_weight_start - self.short_term_weight_end)
+        long_term_weight = 1 - short_term_weight
+        return short_term_weight, long_term_weight
+
     def act(self, action, confidence):
         if not self.validate_action(action):
             action = Agent.ACTION_HOLD
 
+        # 직전 포토폴리오 가치
+        prev_value = self.portfolio_value
+
         # 환경에서 현재 가격 얻기
         curr_price = self.environment.get_price()
+        if self.initial_price == -1:
+            self.initial_price = curr_price
 
         # 매수
         if action == Agent.ACTION_BUY:
@@ -179,7 +197,17 @@ class Agent:
         elif action == Agent.ACTION_HOLD:
             self.num_hold += 1  # 관망 횟수 증가
 
+        short_term_weight, long_term_weight = self.get_dynamic_weights()
+        self.current_day += 1
+
         # 포트폴리오 가치 갱신
         self.portfolio_value = self.balance + curr_price * self.num_stocks
+
+        # 리워드 계산
         self.profitloss = self.portfolio_value / self.initial_balance - 1
-        return self.profitloss
+        self.priceloss = curr_price / self.initial_price - 1
+        long_term_reward = self.profitloss - self.priceloss
+        short_term_reward = (self.portfolio_value - prev_value) / prev_value
+        reward = (short_term_weight * short_term_reward) + (long_term_weight * long_term_reward)
+        print(f"reward: {reward}, short_term_reward: {short_term_reward}, long_term_reward: {long_term_reward}, short_term_weight: {short_term_weight}, long_term_weight: {long_term_weight}")
+        return reward

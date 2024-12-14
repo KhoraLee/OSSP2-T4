@@ -31,7 +31,7 @@ if __name__ == '__main__':
     value_network_name = f'{args.name}_{args.rl_method}_{args.net}_value.mdl'
     policy_network_name = f'{args.name}_{args.rl_method}_{args.net}_policy.mdl'
     start_epsilon = 1 if args.mode in ['train', 'update'] else 0
-    num_epoches = 100 if args.mode in ['train', 'update'] else 1
+    num_epoches = 1000 if args.mode in ['train', 'update'] else 1
     num_steps = 5 if args.net in ['lstm', 'cnn', 'cnn+lstm'] else 1
 
     # Backend 설정

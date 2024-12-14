@@ -78,6 +78,9 @@ class ReinforcementLearner:
         self.batch_size = 0
         # 로그 등 출력 경로
         self.output_path = output_path
+        self.start_epsilon = 1.0
+        self.end_epsilon = 0.01
+        self.alpha = 0.998 # Epoch 100일때는 0.954
 
     def init_value_network(self, shared_network=None, activation='linear', loss='mse'):
         if self.net == 'dnn':
@@ -267,7 +270,9 @@ class ReinforcementLearner:
 
             # 학습을 진행할 수록 탐험 비율 감소
             if learning:
-                epsilon = self.start_epsilon * (1 - (epoch / (self.num_epoches - 1)))
+                # epsilon = self.start_epsilon * (1 - (epoch / (self.num_epoches - 1)))
+                epsilon = self.start_epsilon * (self.alpha ** epoch)
+                epsilon = max(self.end_epsilon, epsilon)  # epsilon이 최소값을 밑돌지 않도록
             else:
                 epsilon = self.start_epsilon
 
@@ -331,7 +336,7 @@ class ReinforcementLearner:
                 f'Loss:{self.loss:.6f} ET:{elapsed_time_epoch:.4f}')
 
             # 에포크 관련 정보 가시화
-            if self.num_epoches == 1 or (epoch + 1) % int(self.num_epoches / 10) == 0:
+            if self.num_epoches == 1 or (epoch + 1) % 10 == 0:
                 self.visualize(epoch_str, self.num_epoches, epsilon)
 
             # 학습 관련 정보 갱신

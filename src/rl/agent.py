@@ -209,5 +209,5 @@ class Agent:
         long_term_reward = self.profitloss - self.priceloss
         short_term_reward = (self.portfolio_value - prev_value) / prev_value
         reward = (short_term_weight * short_term_reward) + (long_term_weight * long_term_reward)
-        print(f"reward: {reward}, short_term_reward: {short_term_reward}, long_term_reward: {long_term_reward}, short_term_weight: {short_term_weight}, long_term_weight: {long_term_weight}")
+        # print(f"reward: {reward}, short_term_reward: {short_term_reward}, long_term_reward: {long_term_reward}, short_term_weight: {short_term_weight}, long_term_weight: {long_term_weight}")
         return reward
